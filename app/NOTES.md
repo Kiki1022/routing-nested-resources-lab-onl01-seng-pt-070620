@@ -1,21 +1,11 @@
-# 
-Rails.application.routes.draw do
- 
-  resources :authors, only: [:show] do
-    # nested resource for posts
-    resources :posts, only: [:show, :index]
-  end
- 
-  resources :posts, only: [:index, :show, :new, :create, :edit, :update]
- 
-  root 'posts#index'
-end
-
- def index
-    if params[:author_id]
-      @posts = Author.find(params[:author_id]).posts
+def show
+    if params[:artist_id]
+      @artist = Artist.find_by(id: params[:artist_id])
+      @song = @artist.songs.find_by(id: params[:id])
+      if @song.nil?
+        redirect_to artist_songs_path(@artist), alert: "Song not found"
+      end
     else
-      @posts = Post.all
+      @song = Song.find(params[:id])
     end
   end
- 
